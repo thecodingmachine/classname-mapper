@@ -32,7 +32,7 @@ Imagine your `composer.json` looks like this:
 {
     "require" : {
         "mouf/classname-mapper": "~1.0"
-    }
+    },
 	"autoload" : {
 		"psr-4" : {
 			"Acme\\" : "src/"
