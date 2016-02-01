@@ -2,9 +2,9 @@
 [![Total Downloads](https://poser.pugx.org/mouf/classname-mapper/downloads)](https://packagist.org/packages/mouf/classname-mapper)
 [![Latest Unstable Version](https://poser.pugx.org/mouf/classname-mapper/v/unstable)](https://packagist.org/packages/mouf/classname-mapper)
 [![License](https://poser.pugx.org/mouf/classname-mapper/license)](https://packagist.org/packages/mouf/classname-mapper)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/thecodingmachine/classname-mapper/badges/quality-score.png?b=4.0)](https://scrutinizer-ci.com/g/thecodingmachine/classname-mapper/?branch=4.0)
-[![Build Status](https://travis-ci.org/thecodingmachine/classname-mapper.svg?branch=4.0)](https://travis-ci.org/thecodingmachine/classname-mapper)
-[![Coverage Status](https://coveralls.io/repos/thecodingmachine/classname-mapper/badge.svg?branch=4.0&service=github)](https://coveralls.io/github/thecodingmachine/classname-mapper?branch=4.0)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/thecodingmachine/classname-mapper/badges/quality-score.png?b=1.0)](https://scrutinizer-ci.com/g/thecodingmachine/classname-mapper/?branch=1.0)
+[![Build Status](https://travis-ci.org/thecodingmachine/classname-mapper.svg?branch=1.0)](https://travis-ci.org/thecodingmachine/classname-mapper)
+[![Coverage Status](https://coveralls.io/repos/thecodingmachine/classname-mapper/badge.svg?branch=1.0&service=github)](https://coveralls.io/github/thecodingmachine/classname-mapper?branch=1.0)
 
 
 ClassName mapper
@@ -42,7 +42,8 @@ Imagine your `composer.json` looks like this:
 ```
 
 Now, let's say you want to create a `Acme\Controller\MyController` class. Where should you put the class?
-To a PHP developer, this is obvious. To a PHP program, it is a tricky problem. The `ClassNameMapper` is here to solve the problem:
+To a PHP developer, it is obvious the class will go in `src/Controller/MyController.php`.
+To a PHP program, it is a tricky problem. The `ClassNameMapper` is here to solve the problem:
 
 ```php
 use Mouf\Composer\ClassNameMapper;
@@ -50,7 +51,7 @@ use Mouf\Composer\ClassNameMapper;
 // This will create a mapper from your root composer file.
 $mapper = ClassNameMapper::createFromComposerFile();
 
-$files = $mapper->getPossibleFileNames();
+$files = $mapper->getPossibleFileNames('Acme\Controller\MyController');
 // $files == ["src/Controller/MyController.php"];
 ```
 
