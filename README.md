@@ -13,7 +13,9 @@ ClassName mapper
 What is it?
 -----------
 
-This package is here to help PHP packages that generate PHP classes find the right place to write the class.
+Some packages generate PHP classes. When a package generates a class, it needs to know in which directory to put the PHP 
+file, so that the class can be autoloaded by the autoloader. 
+This package is here to help you find in which directory to write your PHP file.
 
 This package contains a simple `ClassNameMapper` PHP class.
 
