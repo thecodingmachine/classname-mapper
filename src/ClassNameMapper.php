@@ -29,6 +29,9 @@ class ClassNameMapper
     public function registerPsr0Namespace($namespace, $path) {
         // A namespace always ends with a \
         $namespace = trim($namespace, '\\').'\\';
+        if ($namespace === '\\') {
+            $namespace = '';
+        }
 
         if (!is_array($path)) {
             $path = [$path];
@@ -54,6 +57,9 @@ class ClassNameMapper
     public function registerPsr4Namespace($namespace, $path) {
         // A namespace always ends with a \
         $namespace = trim($namespace, '\\').'\\';
+        if ($namespace === '\\') {
+            $namespace = '';
+        }
 
         if (!is_array($path)) {
             $path = [$path];
@@ -227,18 +233,28 @@ class ClassNameMapper
             $namespace = $result['namespace'];
             $directory = $result['directory'];
 
-            if (strpos($className, $namespace) === 0) {
+            if ($namespace === '') {
                 $tmpClassName = $className;
-                $fileName  = '';
-                $fileNamespace = '';
                 if ($lastNsPos = strripos($tmpClassName, '\\')) {
                     $namespace = substr($tmpClassName, 0, $lastNsPos);
                     $tmpClassName = substr($tmpClassName, $lastNsPos + 1);
-                    $fileName  = str_replace('\\', '/', $namespace) . '/';
                 }
-                $fileName .= str_replace('_', '/', $tmpClassName) . '.php';
 
+                $fileName = str_replace('\\', '/', $namespace) . '/' . str_replace('_', '/', $tmpClassName) . '.php';
                 $possibleFileNames[] = $directory.$fileName;
+            } else {
+                if (strpos($className, $namespace) === 0) {
+                    $tmpClassName = $className;
+                    $fileName  = '';
+                    if ($lastNsPos = strripos($tmpClassName, '\\')) {
+                        $namespace = substr($tmpClassName, 0, $lastNsPos);
+                        $tmpClassName = substr($tmpClassName, $lastNsPos + 1);
+                        $fileName  = str_replace('\\', '/', $namespace) . '/';
+                    }
+                    $fileName .= str_replace('_', '/', $tmpClassName) . '.php';
+
+                    $possibleFileNames[] = $directory.$fileName;
+                }
             }
         }
 
@@ -248,21 +264,24 @@ class ClassNameMapper
             $namespace = $result['namespace'];
             $directory = $result['directory'];
 
-            if (strpos($className, $namespace) === 0) {
-                $shortenedClassName = substr($className, strlen($namespace));
-
-                $fileName  = '';
-                $fileNamespace = '';
-                if ($lastNsPos = strripos($shortenedClassName, '\\')) {
-                    $namespace = substr($shortenedClassName, 0, $lastNsPos);
-                    $shortenedClassName = substr($shortenedClassName, $lastNsPos + 1);
-                    $fileName  = str_replace('\\', '/', $namespace) . '/' . $shortenedClassName;
-                } else {
-                    $fileName = $shortenedClassName;
-                }
-                $fileName .= '.php';
-
+            if ($namespace === '') {
+                $fileName = str_replace('\\', '/', $className) . '.php';
                 $possibleFileNames[] = $directory.$fileName;
+            } else {
+                if (strpos($className, $namespace) === 0) {
+                    $shortenedClassName = substr($className, strlen($namespace));
+
+                    if ($lastNsPos = strripos($shortenedClassName, '\\')) {
+                        $namespace = substr($shortenedClassName, 0, $lastNsPos);
+                        $shortenedClassName = substr($shortenedClassName, $lastNsPos + 1);
+                        $fileName = str_replace('\\', '/', $namespace) . '/' . $shortenedClassName;
+                    } else {
+                        $fileName = $shortenedClassName;
+                    }
+                    $fileName .= '.php';
+
+                    $possibleFileNames[] = $directory . $fileName;
+                }
             }
         }
 

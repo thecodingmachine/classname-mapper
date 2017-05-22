@@ -1,0 +1,19 @@
+{
+  "autoload" : {
+    "psr-0" : {
+      "Foo" : "src/"
+    },
+    "psr-4" : {
+      "Foo\\" : "src2/"
+    }
+  },
+  "autoload-dev" : {
+    "psr-0" : {
+      "Foo" : "tests/"
+    },
+    "psr-4" : {
+      "Foo\\" : "tests2/"
+    }
+  }
+
+}

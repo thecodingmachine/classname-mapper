@@ -5,10 +5,35 @@ namespace Mouf\Composer;
 class ClassNameMapperTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetPossibleFiles() {
-        $mapper = ClassNameMapper::createFromComposerFile(__DIR__.'/../composer.json');
-        $possibleFiles = $mapper->getPossibleFileNames('Mouf\\Composer\\Foo\\Bar');
+        $mapper = ClassNameMapper::createFromComposerFile(__DIR__.'/Fixtures/test_autoload.json');
+        $possibleFiles = $mapper->getPossibleFileNames('Foo\\Bar\\Baz');
 
-        $this->assertEquals([ 'src/Foo/Bar.php' ], $possibleFiles);
+        $this->assertEquals([ 'src/Foo/Bar/Baz.php', 'src2/Bar/Baz.php' ], $possibleFiles);
+
+        $possibleFiles = $mapper->getPossibleFileNames('Foo\\Bar');
+
+        $this->assertEquals([ 'src/Foo/Bar.php', 'src2/Bar.php' ], $possibleFiles);
+
+    }
+
+    public function testUseAutoloadDev() {
+        $mapper = ClassNameMapper::createFromComposerFile(__DIR__.'/Fixtures/test_autoload.json', null, true);
+        $possibleFiles = $mapper->getPossibleFileNames('Foo\\Bar\\Baz');
+
+        $this->assertEquals([ 'src/Foo/Bar/Baz.php', 'tests/Foo/Bar/Baz.php', 'src2/Bar/Baz.php', 'tests2/Bar/Baz.php' ], $possibleFiles);
+
+    }
+
+    public function testGetPossibleFilesFromEmptyPsrAutoload() {
+        $mapper = ClassNameMapper::createFromComposerFile(__DIR__.'/Fixtures/empty_autoload.json');
+        $possibleFiles = $mapper->getPossibleFileNames('Foo\\Bar');
+
+        $this->assertEquals([ 'src/Foo/Bar.php', 'src2/Foo/Bar.php' ], $possibleFiles);
+
+        $possibleFiles = $mapper->getPossibleFileNames('Foo_Zip\\Bar_Baz');
+
+        $this->assertEquals([ 'src/Foo_Zip/Bar/Baz.php', 'src2/Foo_Zip/Bar_Baz.php' ], $possibleFiles);
+
     }
 
     public function testGetManagedNamespaces() {
@@ -18,4 +43,10 @@ class ClassNameMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([ 'Mouf\\Composer\\' ], $namespaces);
     }
 
+    public function testGetManagedNamespacesFromEmptyPsrAutoload() {
+        $mapper = ClassNameMapper::createFromComposerFile(__DIR__.'/Fixtures/empty_autoload.json');
+        $namespaces = $mapper->getManagedNamespaces();
+
+        $this->assertEquals([ '' ], $namespaces);
+    }
 }
