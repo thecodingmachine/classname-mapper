@@ -322,7 +322,7 @@ class ClassNameMapper
      * @param string $dir
      * @return string
      */
-    private static function normalizeDirectory(string $dir) {
+    private static function normalizeDirectory($dir) {
         return $dir === '' ? '' : rtrim($dir, '\\/').'/';
     }
 }
