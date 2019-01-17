@@ -38,7 +38,7 @@ class ClassNameMapper
         }
         // Paths always end with a /
         $paths = array_map(function($path) {
-            return rtrim($path, '\\/').'/';
+            return $path === '' ? '' : rtrim($path, '\\/').'/';
         }, $path);
 
         if (!isset($this->psr0Namespaces[$namespace])) {
@@ -66,7 +66,7 @@ class ClassNameMapper
         }
         // Paths always end with a /
         $paths = array_map(function($path) {
-            return rtrim($path, '\\/').'/';
+            return $path === '' ? '' : rtrim($path, '\\/').'/';
         }, $path);
 
         if (!isset($this->psr4Namespaces[$namespace])) {
@@ -306,13 +306,13 @@ class ClassNameMapper
             if (!is_array($directories)) {
                 $result[] = array(
                     "namespace" => $namespace,
-                    "directory" => trim($directories, '/\\').'/'
+                    "directory" => $directories === '' ? '' : trim($directories, '/\\').'/'
                 );
             } else {
                 foreach ($directories as $dir) {
                     $result[] = array(
                         "namespace" => $namespace,
-                        "directory" => trim($dir, '/').'/'
+                        "directory" => $dir === '' ? '' : trim($dir, '/').'/'
                     );
                 }
             }
