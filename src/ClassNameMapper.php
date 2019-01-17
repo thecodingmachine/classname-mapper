@@ -37,9 +37,7 @@ class ClassNameMapper
             $path = [$path];
         }
         // Paths always end with a /
-        $paths = array_map(function($path) {
-            return rtrim($path, '\\/').'/';
-        }, $path);
+        $paths = array_map([self::class, 'normalizeDirectory'], $path);
 
         if (!isset($this->psr0Namespaces[$namespace])) {
             $this->psr0Namespaces[$namespace] = $paths;
@@ -65,9 +63,7 @@ class ClassNameMapper
             $path = [$path];
         }
         // Paths always end with a /
-        $paths = array_map(function($path) {
-            return rtrim($path, '\\/').'/';
-        }, $path);
+        $paths = array_map([self::class, 'normalizeDirectory'], $path);
 
         if (!isset($this->psr4Namespaces[$namespace])) {
             $this->psr4Namespaces[$namespace] = $paths;
@@ -306,17 +302,27 @@ class ClassNameMapper
             if (!is_array($directories)) {
                 $result[] = array(
                     "namespace" => $namespace,
-                    "directory" => trim($directories, '/\\').'/'
+                    "directory" => self::normalizeDirectory($directories)
                 );
             } else {
                 foreach ($directories as $dir) {
                     $result[] = array(
                         "namespace" => $namespace,
-                        "directory" => trim($dir, '/').'/'
+                        "directory" => self::normalizeDirectory($dir)
                     );
                 }
             }
         }
         return $result;
+    }
+
+    /**
+     * Makes sure the directory ends with a / (unless the string is empty)
+     *
+     * @param string $dir
+     * @return string
+     */
+    private static function normalizeDirectory($dir) {
+        return $dir === '' ? '' : rtrim($dir, '\\/').'/';
     }
 }

@@ -49,4 +49,21 @@ class ClassNameMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals([ '' ], $namespaces);
     }
+
+    public function testEmptyDir() {
+        $mapper = ClassNameMapper::createFromComposerFile(__DIR__.'/Fixtures/test_autoload_empty_dir.json', null, true);
+
+        $possibleFiles = $mapper->getPossibleFileNames('Foo\\Bar\\Baz');
+        $this->assertEquals([ 'Foo/Bar/Baz.php' ], $possibleFiles);
+
+        $possibleFiles = $mapper->getPossibleFileNames('Bar\\Baz');
+        $this->assertEquals([ 'Baz.php' ], $possibleFiles);
+
+        $possibleFiles = $mapper->getPossibleFileNames('Baz\\Bar\\Baz');
+        $this->assertEquals([ 'Baz/Bar/Baz.php' ], $possibleFiles);
+
+        $possibleFiles = $mapper->getPossibleFileNames('Wiz\\Bar\\Baz');
+        $this->assertEquals([ 'Bar/Baz.php' ], $possibleFiles);
+
+    }
 }
