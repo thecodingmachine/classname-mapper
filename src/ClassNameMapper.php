@@ -91,6 +91,23 @@ class ClassNameMapper
     }
 
     /**
+     * @param  string|null $composerAutoloadPath
+     * @return ClassNameMapper
+     */
+    public static function createFromComposerAutoload($composerAutoloadPath = null)
+    {
+        $classNameMapper = new ClassNameMapper();
+
+        if ($composerAutoloadPath === null) {
+            $composerAutoloadPath = __DIR__ . '/../../../autoload.php';
+        }
+
+        $classNameMapper->loadComposerAutoload($composerAutoloadPath);
+
+        return $classNameMapper;
+    }
+
+    /**
      *
      * @param string $composerJsonPath Path to the composer file
      * @param string $rootPath Root path of the project (or null)
@@ -121,6 +138,7 @@ class ClassNameMapper
 
         if (isset($composer["autoload"]["psr-4"])) {
             $psr4 = $composer["autoload"]["psr-4"];
+
             foreach ($psr4 as $namespace => $paths) {
                 if ($relativePath != null) {
                     if (!is_array($paths)) {
@@ -163,6 +181,27 @@ class ClassNameMapper
                     }
                     $this->registerPsr4Namespace($namespace, $paths);
                 }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  string $composerAutoloadPath
+     * @return self
+     */
+    public function loadComposerAutoload($composerAutoloadPath)
+    {
+        if (file_exists($composerAutoloadPath)) {
+            $loader = require $composerAutoloadPath;
+
+            foreach ($loader->getPrefixes() as $namespace => $paths) {
+                $this->registerPsr0Namespace($namespace, $paths);
+            }
+
+            foreach ($loader->getPrefixesPsr4() as $namespace => $paths) {
+                $this->registerPsr4Namespace($namespace, $paths);
             }
         }
 
