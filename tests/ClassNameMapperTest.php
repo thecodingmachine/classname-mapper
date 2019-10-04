@@ -14,6 +14,11 @@ class ClassNameMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals([ 'src/Foo/Bar.php', 'src2/Bar.php' ], $possibleFiles);
 
+        //From autoloader instead of composer.json
+        $mapper = ClassNameMapper::createFromComposerAutoload(__DIR__ . '/../vendor/autoload.php');
+        $possibleFiles = $mapper->getPossibleFileNames('Mouf\\Composer\\ClassNameMapper');
+
+        $this->assertEquals([ realpath(__DIR__ . '/../vendor/composer/') . '/../../src/ClassNameMapper.php', realpath(__DIR__ . '/../vendor/composer/') . '/../../tests/ClassNameMapper.php' ], $possibleFiles);
     }
 
     public function testUseAutoloadDev() {
