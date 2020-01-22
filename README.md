@@ -50,16 +50,25 @@ To a PHP program, it is a tricky problem. The `ClassNameMapper` is here to solve
 ```php
 use Mouf\Composer\ClassNameMapper;
 
-// This will create a mapper from your root composer file.
-$mapper = ClassNameMapper::createFromComposerFile();
+// This will create a mapper from your composer autoloader.
+$mapper = ClassNameMapper::createFromComposerAutoload();
 
 $files = $mapper->getPossibleFileNames('Acme\Controller\MyController');
 // $files == ["src/Controller/MyController.php"];
 ```
 
-You can also query the `ClassNameMapper` for a list of all namespaces that are configured in your `composer.json` file:
+You can also query the `ClassNameMapper` for a list of all namespaces that are configured in your project and its dependencies:
  
 ```php
 $namespaces = $mapper->getManagedNamespaces();
 // $namespaces == ["Acme\\"];
+```
+
+If you want to get files and namespaces only for your project files (and ignore everything inside the "vendor/" directory),
+you can initialize the `ClassNameMapper` from the `composer.json` file (rather than from the Composer autoloader).
+
+To do this, use the `ClassNameMapper::createFromComposerFile()` method:
+
+```php
+$mapper = ClassNameMapper::createFromComposerAutoload();
 ```

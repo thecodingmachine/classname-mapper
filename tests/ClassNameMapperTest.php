@@ -75,4 +75,10 @@ class ClassNameMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([ 'Bar/Baz.php' ], $possibleFiles);
 
     }
+
+    public function testAutoloadException() {
+        $this->expectException(MissingFileException::class);
+        $this->expectExceptionMessage('Could not load file "notexist.php"');
+        ClassNameMapper::createFromComposerAutoload('notexist.php');
+    }
 }
