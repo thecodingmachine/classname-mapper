@@ -8,7 +8,7 @@ use RuntimeException;
 
 class MissingFileException extends RuntimeException
 {
-    public static function couldNotLoadFile(string $path): self
+    public static function couldNotLoadFile(string $path)
     {
         return new self('Could not load file "'.$path.'"');
     }
