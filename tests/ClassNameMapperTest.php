@@ -14,6 +14,15 @@ class ClassNameMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals([ 'src/Foo/Bar.php', 'src2/Bar.php' ], $possibleFiles);
 
+        //From autoloader instead of composer.json
+        $mapper = ClassNameMapper::createFromComposerAutoload(__DIR__ . '/../../vendor/autoload.php');
+        $possibleFiles = $mapper->getPossibleFileNames('Mouf\\Composer\\ClassNameMapper');
+
+        $this->assertEquals([
+                'src/ClassNameMapper.php'
+            ],
+            $possibleFiles
+        );
     }
 
     public function testUseAutoloadDev() {
@@ -65,5 +74,11 @@ class ClassNameMapperTest extends \PHPUnit_Framework_TestCase
         $possibleFiles = $mapper->getPossibleFileNames('Wiz\\Bar\\Baz');
         $this->assertEquals([ 'Bar/Baz.php' ], $possibleFiles);
 
+    }
+
+    public function testAutoloadException() {
+        $this->expectException(MissingFileException::class);
+        $this->expectExceptionMessage('Could not load file "notexist.php"');
+        ClassNameMapper::createFromComposerAutoload('notexist.php');
     }
 }
